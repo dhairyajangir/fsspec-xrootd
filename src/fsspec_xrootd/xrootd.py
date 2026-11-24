@@ -600,6 +600,7 @@ class XRootDFileSystem(AsyncFileSystem):  # type: ignore[misc]
             return _statinfo_to_info(path, deet)
 
     async def _ls(self, path: str, detail: bool = True, **kwargs: Any) -> list[Any]:
+        path = path.rstrip("/") or self.root_marker
         listing = []
         if path in self.dircache and not kwargs.get("force_update", False):
             if detail:

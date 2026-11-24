@@ -268,6 +268,7 @@ def test_recursive_rm_with_files(localserver, clear_server, monkeypatch):
     fs, _, path = fsspec.get_fs_token_paths(
         remoteurl, storage_options={"listings_expiry_time": 60}
     )
+    assert set(fs.ls(path[0] + "/", detail=False)) == {"nested", "unrelated.txt"}
     assert set(fs.ls(path[0], detail=False)) == {"nested", "unrelated.txt"}
     rm_file = fs._rm_file
 
@@ -285,6 +286,7 @@ def test_recursive_rm_with_files(localserver, clear_server, monkeypatch):
     )
 
     assert not os.path.exists(nested)
+    assert fs.ls(path[0] + "/", detail=False) == ["unrelated.txt"]
     assert fs.ls(path[0], detail=False) == ["unrelated.txt"]
     assert os.path.exists(os.path.join(localpath, "unrelated.txt"))
 
